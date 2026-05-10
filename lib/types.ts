@@ -80,6 +80,8 @@ export type ContentPiece = {
   status: ContentStatus;
   scheduled_for: string | null;
   published_at: string | null;
+  external_id: string | null;
+  publish_error: string | null;
   created_at: string;
   updated_at: string;
 };
