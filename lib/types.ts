@@ -32,3 +32,68 @@ export type BrandSynthesisSuggestion = Partial<{
   pain_points: string[];
   competitors: string[];
 }>;
+
+export type Platform =
+  | 'instagram_post'
+  | 'instagram_reel'
+  | 'tiktok'
+  | 'linkedin'
+  | 'instagram_story';
+
+export type ContentStatus = 'draft' | 'scheduled' | 'publishing' | 'published' | 'failed';
+
+export type StoryboardBeat = {
+  beat: number;
+  duration_s: number;
+  shot: string;
+  on_screen_text: string;
+  voiceover: string;
+};
+
+export type StoryFrame = {
+  frame: number;
+  text_overlay: string;
+  interactive: string;
+};
+
+export type ContentPieceMetadata = {
+  hashtags?: string[];
+  cta?: string;
+  hook_score: number;
+  hook_score_reason: string;
+  storyboard?: StoryboardBeat[];
+  total_duration_s?: number;
+  music_vibe?: string;
+  trend_angle?: string | null;
+  format?: string;
+  frames?: StoryFrame[];
+};
+
+export type ContentPiece = {
+  id: string;
+  batch_id: string;
+  brand_id: string;
+  platform: Platform;
+  hook: string;
+  body: string;
+  metadata: ContentPieceMetadata;
+  status: ContentStatus;
+  scheduled_for: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ContentBatch = {
+  id: string;
+  brand_id: string;
+  topic: string;
+  rationale: string | null;
+  created_at: string;
+};
+
+export type RecentBatch = {
+  id: string;
+  topic: string;
+  created_at: string;
+};
