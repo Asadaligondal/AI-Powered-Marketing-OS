@@ -1,11 +1,12 @@
-import { format } from 'date-fns';
-import { Activity, CalendarDays } from 'lucide-react';
+import { format, formatDistanceToNow } from 'date-fns';
+import { Activity, CalendarDays, Users2 } from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { PlatformBadge } from '@/components/content/PlatformBadge';
 import { PageHeader } from '@/components/ui/page-header';
 import { createClient } from '@/lib/supabase/server';
-import type { Platform } from '@/lib/types';
+import type { Lead, Platform } from '@/lib/types';
 
 type ActivityEntry = {
   id: string;
@@ -21,6 +22,12 @@ type TodayPiece = {
   status: string;
   scheduled_for: string | null;
 };
+
+function maskEmail(email: string): string {
+  const [local, domain] = email.split('@');
+  if (!local || !domain) return email;
+  return `${local[0]}***@${domain}`;
+}
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -42,21 +49,28 @@ export default async function DashboardPage() {
   const todayEnd = new Date();
   todayEnd.setHours(23, 59, 59, 999);
 
-  const [{ data: todayPieces }, { data: recentActivity }] = await Promise.all([
-    supabase
-      .from('content_pieces')
-      .select('id, platform, hook, status, scheduled_for')
-      .eq('brand_id', brand.id)
-      .gte('scheduled_for', todayStart.toISOString())
-      .lte('scheduled_for', todayEnd.toISOString())
-      .order('scheduled_for', { ascending: true }),
-    supabase
-      .from('activity_log')
-      .select('id, action, details, created_at')
-      .eq('brand_id', brand.id)
-      .order('created_at', { ascending: false })
-      .limit(5),
-  ]);
+  const [{ data: todayPieces }, { data: recentActivity }, { data: recentLeads }] =
+    await Promise.all([
+      supabase
+        .from('content_pieces')
+        .select('id, platform, hook, status, scheduled_for')
+        .eq('brand_id', brand.id)
+        .gte('scheduled_for', todayStart.toISOString())
+        .lte('scheduled_for', todayEnd.toISOString())
+        .order('scheduled_for', { ascending: true }),
+      supabase
+        .from('activity_log')
+        .select('id, action, details, created_at')
+        .eq('brand_id', brand.id)
+        .order('created_at', { ascending: false })
+        .limit(5),
+      supabase
+        .from('leads')
+        .select('id, keyword, email, created_at')
+        .eq('brand_id', brand.id)
+        .order('created_at', { ascending: false })
+        .limit(3),
+    ]);
 
   const pillars = (brand.content_pillars as string[] | null) ?? [];
 
@@ -86,7 +100,7 @@ export default async function DashboardPage() {
         )}
       </section>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Today's posts */}
         <section className="space-y-3">
           <div className="flex items-center gap-2">
@@ -112,6 +126,46 @@ export default async function DashboardPage() {
                     </span>
                   )}
                 </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Recent leads */}
+        <section className="space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Users2 className="size-4 text-muted-foreground" strokeWidth={1.5} />
+              <h2 className="text-[13px] font-semibold text-foreground">Recent Leads</h2>
+            </div>
+            <Link href="/leads" className="text-[11px] text-muted-foreground/60 hover:text-foreground transition-colors">
+              View all →
+            </Link>
+          </div>
+          {!recentLeads?.length ? (
+            <p className="text-[13px] text-muted-foreground/60">No leads yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {(recentLeads as Pick<Lead, 'id' | 'keyword' | 'email' | 'created_at'>[]).map((lead) => (
+                <Link
+                  key={lead.id}
+                  href="/leads"
+                  className="flex items-center gap-3 rounded-lg border border-border/30 bg-card/60 px-3 py-2.5 transition-colors hover:bg-muted/20"
+                >
+                  {lead.keyword ? (
+                    <span className="rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-mono font-medium text-primary/80">
+                      {lead.keyword}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-muted-foreground/40">no keyword</span>
+                  )}
+                  <span className="min-w-0 flex-1 truncate text-[12px] font-mono text-foreground/60">
+                    {lead.email ? maskEmail(lead.email) : '—'}
+                  </span>
+                  <span className="shrink-0 text-[10px] text-muted-foreground/40">
+                    {formatDistanceToNow(new Date(lead.created_at), { addSuffix: true })}
+                  </span>
+                </Link>
               ))}
             </div>
           )}

@@ -99,3 +99,19 @@ export type RecentBatch = {
   topic: string;
   created_at: string;
 };
+
+export type Lead = {
+  id: string;
+  brand_id: string;
+  source: string | null;
+  keyword: string | null;
+  name: string | null;
+  email: string | null;
+  raw_message: string | null;
+  extracted_interests: string[];
+  from_handle: string | null;
+  klaviyo_profile_id: string | null;
+  klaviyo_synced_at: string | null;
+  klaviyo_sync_error: string | null;
+  created_at: string;
+};
