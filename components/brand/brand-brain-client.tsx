@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionDivider } from "@/components/ui/section";
 import { Textarea } from "@/components/ui/textarea";
 import type { BrandProduct, BrandRow, BrandSynthesisSuggestion } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
 
 function asStringArray(v: unknown): string[] {
   if (!Array.isArray(v)) return [];
@@ -243,12 +244,17 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
   }
 
   return (
-    <div className="grid gap-8">
-      <Card className="border-[#222222] bg-[#111111]">
+    <div className="space-y-10 pb-16">
+      <PageHeader
+        title="Brand brain"
+        subtitle="Deskbound ships pre-seeded for the demo. Edit fields and save — embeddings refresh automatically."
+      />
+      <div className="grid gap-8">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-[#F5F5F5]">Brand brain</CardTitle>
-          <CardDescription className="text-[#A3A3A3]">
-            Deskbound ships pre-seeded for the demo. Edit fields and save — embeddings refresh automatically.
+          <CardTitle>Brand profile</CardTitle>
+          <CardDescription>
+            Core positioning fields. Saving refreshes your embedding vector from name, tagline, description, voice, and audience.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
@@ -259,7 +265,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="border-[#2A2A2A] bg-[#0A0A0A]"
               />
             </div>
             <div className="grid gap-2 md:col-span-2">
@@ -268,7 +273,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                 id="tagline"
                 value={tagline}
                 onChange={(e) => setTagline(e.target.value)}
-                className="border-[#2A2A2A] bg-[#0A0A0A]"
               />
             </div>
             <div className="grid gap-2 md:col-span-2">
@@ -278,7 +282,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
-                className="border-[#2A2A2A] bg-[#0A0A0A]"
               />
             </div>
             <div className="grid gap-2 md:col-span-2">
@@ -288,7 +291,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                 value={voice}
                 onChange={(e) => setVoice(e.target.value)}
                 rows={5}
-                className="border-[#2A2A2A] bg-[#0A0A0A]"
               />
             </div>
             <div className="grid gap-2 md:col-span-2">
@@ -298,34 +300,35 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                 value={audience}
                 onChange={(e) => setAudience(e.target.value)}
                 rows={5}
-                className="border-[#2A2A2A] bg-[#0A0A0A]"
               />
             </div>
           </div>
 
-          <Separator className="bg-[#222222]" />
+          <SectionDivider />
 
           <div className="grid gap-3">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <p className="text-sm font-medium text-[#F5F5F5]">Products</p>
-                <p className="text-xs text-[#737373]">Name, type, price, description.</p>
+                <p className="text-sm font-medium text-foreground">Products</p>
+                <p className="text-xs text-muted-foreground">Name, type, price, description.</p>
               </div>
-              <Button type="button" variant="outline" className="border-[#2A2A2A] bg-[#0A0A0A]" onClick={addProduct}>
+              <Button type="button" variant="outline" onClick={addProduct}>
                 Add product
               </Button>
             </div>
 
             <div className="grid gap-3">
               {products.map((p, idx) => (
-                <div key={idx} className="rounded-lg border border-[#222222] bg-[#0A0A0A] p-4">
+                <div
+                  key={idx}
+                  className="group rounded-lg border border-border bg-background p-4 shadow-[var(--elev-edge)] transition-colors duration-150 ease-out hover:border-border hover:bg-muted/20"
+                >
                   <div className="grid gap-3 md:grid-cols-2">
                     <div className="grid gap-2 md:col-span-2">
                       <Label>Name</Label>
                       <Input
                         value={p.name}
                         onChange={(e) => updateProduct(idx, { name: e.target.value })}
-                        className="border-[#2A2A2A] bg-[#111111]"
                       />
                     </div>
                     <div className="grid gap-2">
@@ -333,7 +336,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                       <Input
                         value={p.type ?? ""}
                         onChange={(e) => updateProduct(idx, { type: e.target.value })}
-                        className="border-[#2A2A2A] bg-[#111111]"
                       />
                     </div>
                     <div className="grid gap-2">
@@ -341,7 +343,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                       <Input
                         value={p.price ?? ""}
                         onChange={(e) => updateProduct(idx, { price: e.target.value })}
-                        className="border-[#2A2A2A] bg-[#111111]"
                       />
                     </div>
                     <div className="grid gap-2 md:col-span-2">
@@ -350,7 +351,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                         value={p.description ?? ""}
                         onChange={(e) => updateProduct(idx, { description: e.target.value })}
                         rows={3}
-                        className="border-[#2A2A2A] bg-[#111111]"
                       />
                     </div>
                   </div>
@@ -358,7 +358,7 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="text-[#A3A3A3] hover:text-[#F5F5F5]"
+                      className="text-muted-foreground hover:text-foreground"
                       onClick={() => removeProduct(idx)}
                     >
                       Remove
@@ -369,7 +369,7 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
             </div>
           </div>
 
-          <Separator className="bg-[#222222]" />
+          <SectionDivider />
 
           <ChipEditor
             title="Content pillars"
@@ -400,22 +400,17 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
           />
 
           <div className="flex justify-end">
-            <Button
-              type="button"
-              disabled={pendingSave || !name.trim()}
-              onClick={onSave}
-              className="bg-[#3B82F6] text-white hover:bg-[#2563EB]"
-            >
+            <Button type="button" disabled={pendingSave || !name.trim()} onClick={onSave}>
               {pendingSave ? "Saving…" : "Save"}
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="border-[#222222] bg-[#111111]">
+      <Card className="border-l-2 border-l-primary bg-card">
         <CardHeader>
-          <CardTitle className="text-[#F5F5F5]">Train from a document</CardTitle>
-          <CardDescription className="text-[#A3A3A3]">
+          <CardTitle>Train from a document</CardTitle>
+          <CardDescription>
             Paste plain text or markdown. Optional `.txt` / `.md` upload reads into the textarea (parsed client-side).
           </CardDescription>
         </CardHeader>
@@ -427,7 +422,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
               value={docTitle}
               onChange={(e) => setDocTitle(e.target.value)}
               placeholder="e.g., Founder letter"
-              className="border-[#2A2A2A] bg-[#0A0A0A]"
             />
           </div>
 
@@ -437,7 +431,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
               id="docFile"
               type="file"
               accept=".txt,.md,text/plain,text/markdown"
-              className="border-[#2A2A2A] bg-[#0A0A0A]"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
@@ -462,7 +455,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
               onChange={(e) => setDocContent(e.target.value)}
               rows={10}
               placeholder="Paste positioning notes, an outline, or any narrative about the brand."
-              className="border-[#2A2A2A] bg-[#0A0A0A]"
             />
           </div>
 
@@ -472,7 +464,6 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
               disabled={pendingSynth || !docContent.trim()}
               onClick={onSynthesize}
               variant="outline"
-              className="border-[#2A2A2A] bg-[#0A0A0A]"
             >
               {pendingSynth ? "Synthesizing…" : "Synthesize"}
             </Button>
@@ -481,10 +472,10 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
       </Card>
 
       {!!suggestionEntries.length && (
-        <Card className="border-[#222222] bg-[#111111]">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-[#F5F5F5]">Suggested updates</CardTitle>
-            <CardDescription className="text-[#A3A3A3]">
+            <CardTitle>Suggested updates</CardTitle>
+            <CardDescription>
               Review deltas side-by-side. Accept writes to your brand and refreshes embeddings.
             </CardDescription>
           </CardHeader>
@@ -492,22 +483,18 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
             {suggestionEntries.map(([field, proposed]) => {
               const current = currentValueForField(field);
               return (
-                <div key={field} className="rounded-lg border border-[#222222] bg-[#0A0A0A] p-4">
-                  <p className="text-sm font-medium text-[#F5F5F5]">{FIELD_LABELS[field]}</p>
+                <div key={field} className="rounded-lg border border-border bg-background p-4">
+                  <p className="text-sm font-medium text-foreground">{FIELD_LABELS[field]}</p>
                   <div className="mt-3 grid gap-3 md:grid-cols-2">
                     <div className="grid gap-2">
-                      <p className="text-xs font-medium text-[#737373]">Current</p>
-                      <pre
-                        className={cn(
-                          "max-h-56 overflow-auto whitespace-pre-wrap rounded-md border border-[#222222] bg-[#111111] p-3 text-xs text-[#A3A3A3]",
-                        )}
-                      >
+                      <p className="text-xs font-medium text-muted-foreground">Current</p>
+                      <pre className="max-h-56 overflow-auto whitespace-pre-wrap rounded-md border border-border bg-card p-3 font-mono text-[12px] text-muted-foreground">
                         {formatPreview(current)}
                       </pre>
                     </div>
                     <div className="grid gap-2">
-                      <p className="text-xs font-medium text-[#737373]">Proposed</p>
-                      <pre className="max-h-56 overflow-auto whitespace-pre-wrap rounded-md border border-[#222222] bg-[#111111] p-3 text-xs text-[#F5F5F5]">
+                      <p className="text-xs font-medium text-muted-foreground">Proposed</p>
+                      <pre className="max-h-56 overflow-auto whitespace-pre-wrap rounded-md border border-border bg-card p-3 font-mono text-[12px] text-foreground">
                         {formatPreview(proposed)}
                       </pre>
                     </div>
@@ -516,18 +503,13 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
                     <Button
                       type="button"
                       variant="ghost"
-                      className="text-[#A3A3A3] hover:text-[#F5F5F5]"
+                      className="text-muted-foreground hover:text-foreground"
                       disabled={pendingAccept}
                       onClick={() => onReject(field)}
                     >
                       Reject
                     </Button>
-                    <Button
-                      type="button"
-                      disabled={pendingAccept}
-                      className="bg-[#3B82F6] text-white hover:bg-[#2563EB]"
-                      onClick={() => onAccept(field, proposed)}
-                    >
+                    <Button type="button" disabled={pendingAccept} onClick={() => onAccept(field, proposed)}>
                       Accept
                     </Button>
                   </div>
@@ -537,6 +519,7 @@ export function BrandBrainClient({ brand }: { brand: BrandRow }) {
           </CardContent>
         </Card>
       )}
+    </div>
     </div>
   );
 }
@@ -554,23 +537,24 @@ function ChipEditor(props: {
     <div className="grid gap-2">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-[#F5F5F5]">{props.title}</p>
-          <p className="text-xs text-[#737373]">{props.helper}</p>
+          <p className="text-sm font-medium text-foreground">{props.title}</p>
+          <p className="text-xs text-muted-foreground">{props.helper}</p>
         </div>
       </div>
-      <div className="flex flex-wrap gap-2 rounded-lg border border-[#222222] bg-[#0A0A0A] p-3">
+      <div className="flex flex-wrap gap-2 rounded-lg border border-border bg-background p-3">
         {props.values.length === 0 ? (
-          <p className="text-xs text-[#737373]">No items yet.</p>
+          <p className="text-xs text-muted-foreground">No items yet.</p>
         ) : (
           props.values.map((v) => (
             <button
               key={v}
               type="button"
               onClick={() => props.onRemove(v)}
-              className="rounded-md border border-[#2A2A2A] bg-[#111111] px-2 py-1 text-xs text-[#F5F5F5] transition-colors duration-150 ease-out hover:bg-[#1A1A1A]"
-              title="Click to remove"
+              className="inline-flex max-w-full items-center gap-1 rounded-sm border border-border bg-muted px-2 py-1 text-left text-[12px] font-normal text-foreground transition-colors duration-150 ease-out hover:bg-muted/80"
+              title="Remove"
             >
-              {v}
+              <span className="min-w-0 truncate">{v}</span>
+              <X className="size-3 shrink-0 opacity-50" strokeWidth={1.5} aria-hidden />
             </button>
           ))
         )}
@@ -585,7 +569,6 @@ function ChipEditor(props: {
           }
         }}
         placeholder="Type and press Enter…"
-        className="border-[#2A2A2A] bg-[#0A0A0A]"
       />
     </div>
   );

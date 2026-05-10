@@ -2,6 +2,7 @@
 
 import {
   CalendarDays,
+  ChevronUp,
   FileText,
   LayoutDashboard,
   LogOut,
@@ -11,6 +12,13 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -21,6 +29,16 @@ const nav = [
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/leads", label: "Leads", icon: Users },
 ] as const;
+
+function initialsFromName(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  const chars =
+    parts.length >= 2
+      ? `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`
+      : (parts[0]?.slice(0, 2) ?? "?");
+  return chars.toUpperCase();
+}
 
 export function AppSidebar({ brandName }: { brandName: string }) {
   const pathname = usePathname();
@@ -35,16 +53,17 @@ export function AppSidebar({ brandName }: { brandName: string }) {
 
   return (
     <aside
-      className="flex h-screen w-[240px] shrink-0 flex-col border-r border-[#222222] bg-[#111111] transition-colors duration-150 ease-out"
+      className="flex h-screen w-[240px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-colors duration-150 ease-out"
       aria-label="Main navigation"
     >
-      <div className="border-b border-[#222222] px-4 py-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#737373]">
+      <div className="border-b border-sidebar-border px-4 py-4 shadow-[var(--elev-edge)]">
+        <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
           AI Marketing OS
         </p>
-        <p className="mt-1 truncate text-sm font-medium text-[#F5F5F5]">{brandName}</p>
+        <p className="mt-0.5 truncate text-[14px] font-medium tracking-tight text-foreground">{brandName}</p>
       </div>
-      <nav className="flex flex-1 flex-col gap-0.5 p-2">
+
+      <nav className="flex flex-1 flex-col gap-0.5 p-2 pt-3">
         {nav.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || pathname.startsWith(`${href}/`);
           return (
@@ -52,27 +71,38 @@ export function AppSidebar({ brandName }: { brandName: string }) {
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors duration-150 ease-out",
+                "relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors duration-150 ease-out",
                 active
-                  ? "bg-[#1A1A1A] text-[#F5F5F5]"
-                  : "text-[#A3A3A3] hover:bg-[#1A1A1A]/60 hover:text-[#F5F5F5]",
+                  ? "bg-muted text-foreground before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:rounded-full before:bg-primary"
+                  : "text-muted-foreground hover:bg-muted/70 hover:text-foreground",
               )}
             >
-              <Icon className="size-4 shrink-0 opacity-80" aria-hidden />
+              <Icon className="size-4 shrink-0 opacity-85" strokeWidth={1.5} aria-hidden />
               <span>{label}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="border-t border-[#222222] p-2">
-        <button
-          type="button"
-          onClick={() => void signOut()}
-          className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-[#A3A3A3] transition-colors duration-150 ease-out hover:bg-[#1A1A1A]/60 hover:text-[#F5F5F5]"
-        >
-          <LogOut className="size-4 shrink-0 opacity-80" aria-hidden />
-          Sign out
-        </button>
+
+      <div className="border-t border-sidebar-border p-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left outline-none transition-colors duration-150 ease-out hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-ring">
+            <Avatar size="sm" className="size-7 border border-border">
+              <AvatarFallback className="text-[11px] font-medium">{initialsFromName(brandName)}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] font-medium text-foreground">Account</p>
+              <p className="truncate text-[11px] text-muted-foreground">{brandName}</p>
+            </div>
+            <ChevronUp className="size-4 shrink-0 text-muted-foreground opacity-70" strokeWidth={1.5} aria-hidden />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" className="min-w-52">
+            <DropdownMenuItem onClick={() => void signOut()} className="gap-2 text-[13px]">
+              <LogOut className="size-3.5" strokeWidth={1.5} aria-hidden />
+              Sign out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </aside>
   );

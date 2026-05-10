@@ -428,6 +428,8 @@ Build in this order. Each phase ends with something clickable. Don't move forwar
 - Don't use emojis in the UI chrome (icons only — use `lucide-react`)
 - Don't use rounded-full pills everywhere — keep `rounded-md` / `rounded-lg`
 
+> **Superseded by Linear.md design system applied 2026-05-10.** Use `Linear.md` in the repo root as the visual source of truth for colors, typography, spacing, and motion; this subsection remains as historical context only.
+
 ## 12. What sells the demo (priorities for polish)
 
 In order of impact on Liya's gut reaction:

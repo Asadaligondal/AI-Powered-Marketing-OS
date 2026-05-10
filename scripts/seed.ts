@@ -12,7 +12,7 @@ import { embed } from "@/lib/openai";
 import { brandEmbeddingSource } from "@/lib/brandEmbedding";
 import type { BrandProduct } from "@/lib/types";
 
-const DEMO_EMAIL = process.env.DEMO_USER_EMAIL ?? "demo@deskbound.test";
+const DEMO_EMAIL = process.env.DEMO_USER_EMAIL ?? "admin@yahoo.com";
 const DEMO_PASSWORD = process.env.DEMO_USER_PASSWORD;
 
 const products: BrandProduct[] = [

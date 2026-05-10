@@ -1,8 +1,16 @@
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
+import { FileText } from "lucide-react";
+
 export default function ContentPage() {
   return (
-    <div className="rounded-lg border border-[#222222] bg-[#111111] p-6">
-      <h1 className="text-lg font-medium text-[#F5F5F5]">Content</h1>
-      <p className="mt-2 text-sm text-[#A3A3A3]">Phase 2 — generate multi-platform batches from a topic.</p>
+    <div className="space-y-8 pb-16">
+      <PageHeader title="Content" subtitle="Phase 2 — multi-platform generation from a single topic." />
+      <EmptyState
+        icon={FileText}
+        title="Content studio"
+        description="Generate platform-specific drafts from your Brand Brain context in the next phase."
+      />
     </div>
   );
 }

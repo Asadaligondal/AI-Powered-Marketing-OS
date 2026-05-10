@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { createClient } from "@/lib/supabase/server";
+import { LayoutDashboard } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -11,12 +14,19 @@ export default async function DashboardPage() {
 
   const { data: brand } = await supabase.from("brands").select("name").eq("user_id", user.id).maybeSingle();
 
+  const name = brand?.name ?? "your brand";
+
   return (
-    <div className="rounded-lg border border-[#222222] bg-[#111111] p-6">
-      <h1 className="text-lg font-medium text-[#F5F5F5]">Welcome, {brand?.name ?? "your brand"}</h1>
-      <p className="mt-2 text-sm text-[#A3A3A3]">
-        Dashboard overview ships in Phase 5 — navigation and Brand Brain are live now.
-      </p>
+    <div className="space-y-8 pb-16">
+      <PageHeader
+        title="Dashboard"
+        subtitle="Overview of your workspace — richer widgets arrive in Phase 5."
+      />
+      <EmptyState
+        icon={LayoutDashboard}
+        title={`Welcome, ${name}`}
+        description="Dashboard overview ships in Phase 5. Brand Brain and navigation are live — open Brand from the sidebar to tune positioning."
+      />
     </div>
   );
 }

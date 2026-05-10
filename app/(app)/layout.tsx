@@ -17,11 +17,13 @@ export default async function AppGroupLayout({
   const { data: brand } = await supabase.from("brands").select("name").eq("user_id", user.id).maybeSingle();
 
   return (
-    <div className="flex min-h-screen bg-[#0A0A0A] text-[#F5F5F5]">
+    <div className="flex min-h-screen bg-background text-foreground">
       <AppSidebar brandName={brand?.name ?? "Brand"} />
-      <main className="flex-1 overflow-auto p-8">
-        <div className="mx-auto max-w-[1200px]">{children}</div>
-      </main>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <main className="flex-1 overflow-auto px-6 py-8 md:px-10">
+          <div className="mx-auto max-w-[1280px]">{children}</div>
+        </main>
+      </div>
     </div>
   );
 }

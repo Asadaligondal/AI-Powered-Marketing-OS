@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Sparkles } from "lucide-react";
+import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -16,7 +17,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setPending(true);
     const supabase = createClient();
@@ -31,45 +32,58 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md border-[#222222] bg-[#111111]">
-      <CardHeader>
-        <CardTitle className="text-[#F5F5F5]">Sign in</CardTitle>
-        <CardDescription className="text-[#A3A3A3]">
-          Use the seeded demo credentials from your <code className="text-xs">.env.local</code>.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form className="grid gap-4" onSubmit={(e) => void onSubmit(e)}>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              placeholder="demo@deskbound.test"
-              value={email}
-              onChange={(ev) => setEmail(ev.target.value)}
-              required
-              className="border-[#2A2A2A] bg-[#0A0A0A]"
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(ev) => setPassword(ev.target.value)}
-              required
-              className="border-[#2A2A2A] bg-[#0A0A0A]"
-            />
-          </div>
-          <Button type="submit" disabled={pending} className="bg-[#3B82F6] text-white hover:bg-[#2563EB]">
-            {pending ? "Signing in…" : "Sign in"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="flex w-full max-w-md flex-col gap-8">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <div className="flex size-11 items-center justify-center rounded-md border border-border bg-card shadow-[var(--elev-edge)]">
+          <Sparkles className="size-5 text-primary" strokeWidth={1.5} aria-hidden />
+        </div>
+        <div className="space-y-1">
+          <p className="text-[13px] font-medium uppercase tracking-[0.4px] text-muted-foreground">
+            AI Marketing OS
+          </p>
+          <p className="text-[15px] font-medium tracking-tight text-foreground">Sign in to continue</p>
+        </div>
+      </div>
+
+      <Card className="border-border shadow-[var(--elev-edge)]">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-[17px]">Credentials</CardTitle>
+          <CardDescription>Use the demo account from your local environment.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form className="grid gap-5" onSubmit={(e) => void onSubmit(e)}>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="admin@yahoo.com"
+                value={email}
+                onChange={(ev) => setEmail(ev.target.value)}
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(ev) => setPassword(ev.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" disabled={pending} className="w-full">
+              {pending ? "Signing in…" : "Sign in"}
+            </Button>
+          </form>
+          <p className="mt-6 text-center text-[12px] leading-relaxed text-muted-foreground">
+            Demo credentials are configured in <span className="font-mono text-[11px] text-foreground/90">.env.local</span>.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
