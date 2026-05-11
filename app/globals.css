@@ -104,6 +104,8 @@
   --sidebar-border: var(--linear-hairline);
   --sidebar-ring: rgb(94 105 209 / 0.45);
 
+  --btn-primary-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.07);
+
   --chart-1: var(--linear-primary);
   --chart-2: var(--linear-ink-muted);
   --chart-3: var(--linear-ink-subtle);
@@ -116,64 +118,57 @@
 }
 
 .light {
+  /* ─── Lovable design system (Lovable.md) ─── */
   color-scheme: light;
 
-  --linear-canvas: #ffffff;
-  --linear-surface-1: #f7f8fa;
-  --linear-surface-2: #f0f1f4;
-  --linear-surface-3: #e8eaed;
-  --linear-surface-4: #e2e4e8;
-  --linear-hairline: #e2e4e9;
-  --linear-hairline-strong: #c8cad1;
-  --linear-ink: #111827;
-  --linear-ink-muted: #374151;
-  --linear-ink-subtle: #6b7280;
-  --linear-ink-tertiary: #9ca3af;
-  --linear-primary: #5e6ad2;
-  --linear-primary-hover: #4a55bf;
-  --linear-primary-focus: #4f5abf;
-  --linear-success: #16a34a;
-  --linear-overlay: #000000;
-
-  --elev-edge: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.04);
-
-  --background: var(--linear-canvas);
-  --foreground: var(--linear-ink);
-  --card: var(--linear-surface-1);
-  --card-foreground: var(--linear-ink);
-  --popover: #ffffff;
-  --popover-foreground: var(--linear-ink);
-  --primary: var(--linear-primary);
-  --primary-foreground: #ffffff;
-  --primary-hover: var(--linear-primary-hover);
-  --primary-active: var(--linear-primary-focus);
-  --secondary: var(--linear-surface-1);
-  --secondary-foreground: var(--linear-ink);
-  --muted: var(--linear-surface-2);
-  --muted-foreground: var(--linear-ink-subtle);
-  --accent: var(--linear-surface-2);
-  --accent-foreground: var(--linear-ink);
-  --destructive: oklch(0.58 0.2 25);
-  --border: var(--linear-hairline);
-  --input: var(--linear-hairline);
-  --ring: rgb(94 105 209 / 0.35);
-  --success: var(--linear-success);
+  --background: #f7f4ed;
+  --foreground: #1c1c1c;
+  --card: #f7f4ed;
+  --card-foreground: #1c1c1c;
+  --popover: #fcfbf8;
+  --popover-foreground: #1c1c1c;
+  --primary: #1c1c1c;
+  --primary-foreground: #fcfbf8;
+  --primary-hover: #2d2d2d;
+  --primary-active: #404040;
+  --secondary: #eeebe5;
+  --secondary-foreground: #1c1c1c;
+  --muted: #eeebe5;
+  --muted-foreground: #5f5f5d;
+  --accent: #eeebe5;
+  --accent-foreground: #1c1c1c;
+  --destructive: #dc2626;
+  --border: #eceae4;
+  --input: #eceae4;
+  --ring: rgba(59, 130, 246, 0.5);
+  --success: #16a34a;
   --radius: 12px;
 
-  --sidebar: var(--linear-surface-1);
-  --sidebar-foreground: var(--linear-ink);
-  --sidebar-primary: var(--linear-primary);
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: var(--linear-surface-2);
-  --sidebar-accent-foreground: var(--linear-ink);
-  --sidebar-border: var(--linear-hairline);
-  --sidebar-ring: rgb(94 105 209 / 0.35);
+  --elev-edge: none;
+  --linear-overlay: #1c1c1c;
 
-  --chart-1: var(--linear-primary);
-  --chart-2: var(--linear-ink-muted);
-  --chart-3: var(--linear-ink-subtle);
-  --chart-4: var(--linear-surface-3);
-  --chart-5: var(--linear-success);
+  /* Lovable's signature inset shadow on dark buttons */
+  --btn-primary-shadow:
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+    rgba(0, 0, 0, 0) 0px 0px 0px 0px,
+    rgba(255, 255, 255, 0.2) 0px 0.5px 0px 0px inset,
+    rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px inset,
+    rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+
+  --sidebar: #f7f4ed;
+  --sidebar-foreground: #1c1c1c;
+  --sidebar-primary: #1c1c1c;
+  --sidebar-primary-foreground: #fcfbf8;
+  --sidebar-accent: #eeebe5;
+  --sidebar-accent-foreground: #1c1c1c;
+  --sidebar-border: #eceae4;
+  --sidebar-ring: rgba(59, 130, 246, 0.5);
+
+  --chart-1: #1c1c1c;
+  --chart-2: #5f5f5d;
+  --chart-3: #9ca3af;
+  --chart-4: #eeebe5;
+  --chart-5: #16a34a;
 }
 
 @layer base {
@@ -182,13 +177,15 @@
   }
   html {
     @apply font-sans antialiased;
-    font-feature-settings: "cv11", "ss01", "ss03";
     letter-spacing: -0.01em;
   }
   body {
     @apply bg-background text-foreground;
     font-size: 14px;
     line-height: 1.5;
+  }
+  h1, h2, h3 {
+    letter-spacing: -0.025em;
   }
 }
 
