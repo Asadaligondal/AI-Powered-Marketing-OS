@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -48,6 +49,8 @@ export function AppSidebar({ brandName }: { brandName: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const isDark = theme === "dark";
 
   async function signOut() {
@@ -99,12 +102,12 @@ export function AppSidebar({ brandName }: { brandName: string }) {
           }}
           className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors duration-150 ease-out hover:bg-muted/70 hover:text-foreground"
         >
-          {isDark ? (
+          {mounted && (isDark ? (
             <Sun className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} aria-hidden />
           ) : (
             <Moon className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} aria-hidden />
-          )}
-          <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
+          ))}
+          <span>{mounted ? (isDark ? "Light Mode" : "Dark Mode") : "Theme"}</span>
         </button>
 
         <DropdownMenu>
