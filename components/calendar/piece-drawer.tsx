@@ -18,6 +18,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -200,6 +201,10 @@ export function PieceDrawer({
   return (
     <Drawer open={open} onOpenChange={(o) => { if (!o) onClose(); }} direction="right">
       <DrawerContent className="data-[vaul-drawer-direction=right]:sm:max-w-lg overflow-y-auto">
+        <DrawerTitle className="sr-only">Content piece</DrawerTitle>
+        <DrawerDescription className="sr-only">
+          Edit hook and body, publish or delete this scheduled item.
+        </DrawerDescription>
         <DrawerHeader className="border-b border-border/40 pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 flex-wrap">

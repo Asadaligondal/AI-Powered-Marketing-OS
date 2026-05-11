@@ -66,8 +66,13 @@ export function CalendarGrid({
   const [selectedPiece, setSelectedPiece] = useState<ContentPiece | null>(null);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [publishingIds, setPublishingIds] = useState<Set<string>>(new Set());
+  const [showLocalhostCron, setShowLocalhostCron] = useState(false);
 
   const supabase = createClient();
+
+  useEffect(() => {
+    setShowLocalhostCron(window.location.hostname === 'localhost');
+  }, []);
 
   const loadMonth = useCallback(
     async (month: Date) => {
@@ -243,8 +248,6 @@ export function CalendarGrid({
       });
   }
 
-  const isDev = typeof window !== 'undefined' && window.location.hostname === 'localhost';
-
   return (
     <>
       {/* Header controls */}
@@ -311,8 +314,8 @@ export function CalendarGrid({
             {isGenerating ? 'Generating…' : 'Generate 30 days'}
           </Button>
 
-          {/* Dev-only cron trigger */}
-          {isDev && (
+          {/* Dev-only cron trigger (after mount so SSR HTML matches first paint) */}
+          {showLocalhostCron && (
             <Button
               variant="ghost"
               size="sm"
