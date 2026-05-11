@@ -4,7 +4,6 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import type { ContentPiece, RecentBatch } from '@/lib/types';
@@ -27,12 +26,18 @@ const PLATFORM_LABELS = [
 
 function SkeletonCard({ label }: { label: string }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-6">
+    <div className="relative overflow-hidden rounded-xl border border-border/50 bg-card p-6">
+      {/* Shimmer sweep */}
+      <div
+        className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-violet-500/8 to-transparent"
+        style={{ animation: 'shimmer 1.8s ease-in-out infinite' }}
+      />
       <div className="mb-4 flex items-center justify-between">
-        <Skeleton className="h-5 w-28 rounded-md" />
-        <Skeleton className="h-5 w-10 rounded-md" />
+        <Skeleton className="h-5 w-28 rounded-full" />
+        <Skeleton className="h-5 w-10 rounded-full" />
       </div>
-      <Skeleton className="mb-4 h-5 w-3/4 rounded-md" />
+      <Skeleton className="mb-3 h-5 w-3/4 rounded" />
+      <div className="mb-4 h-0.5 w-12 rounded-full bg-gradient-to-r from-violet-500/40 to-fuchsia-500/40" />
       <div className="space-y-2">
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-full" />
@@ -41,7 +46,7 @@ function SkeletonCard({ label }: { label: string }) {
         <Skeleton className="h-4 w-4/5" />
         <Skeleton className="h-4 w-3/4" />
       </div>
-      <p className="mt-4 text-[11px] text-muted-foreground/50">{label}</p>
+      <p className="mt-4 text-[11px] text-muted-foreground/35">{label}</p>
     </div>
   );
 }
@@ -103,20 +108,23 @@ export function ContentStudio({ recentBatches }: ContentStudioProps) {
       {/* Input */}
       <div className="space-y-3">
         <div className="relative">
+          {/* Gradient focus glow */}
+          <div className="pointer-events-none absolute -inset-px rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 opacity-0 blur-sm transition-opacity duration-200 focus-within:opacity-25" />
+
           <Textarea
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="What do you want to talk about?"
-            className="min-h-[72px] resize-none pr-28 text-[15px] leading-relaxed"
+            className="relative min-h-[72px] resize-none pr-32 text-[15px] leading-relaxed"
             disabled={isGenerating}
           />
-          <div className="absolute right-3 bottom-3">
-            <Button
+
+          <div className="absolute bottom-3 right-3">
+            <button
               onClick={() => void generate()}
               disabled={!topic.trim() || isGenerating}
-              size="sm"
-              className="gap-1.5"
+              className="inline-flex items-center gap-1.5 overflow-hidden rounded-md bg-gradient-to-r from-violet-600 to-fuchsia-600 px-3 py-1.5 text-[13px] font-medium text-white transition-all duration-150 hover:from-violet-500 hover:to-fuchsia-500 hover:shadow-[0_4px_14px_rgba(139,92,246,0.45)] disabled:pointer-events-none disabled:opacity-40"
             >
               {isGenerating ? (
                 <Loader2 className="size-3.5 animate-spin" strokeWidth={1.5} />
@@ -124,34 +132,39 @@ export function ContentStudio({ recentBatches }: ContentStudioProps) {
                 <Sparkles className="size-3.5" strokeWidth={1.5} />
               )}
               Generate
-            </Button>
+            </button>
           </div>
         </div>
 
+        {/* Example topics */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[12px] text-muted-foreground/60">Try:</span>
+          <span className="text-[12px] text-muted-foreground/50">Try:</span>
           {EXAMPLE_TOPICS.map((t) => (
             <button
               key={t}
               onClick={() => setTopic(t)}
               disabled={isGenerating}
-              className="rounded-md border border-border/50 bg-muted/20 px-2.5 py-1 text-[12px] text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+              className="rounded-full border border-violet-500/20 bg-gradient-to-r from-violet-500/8 to-fuchsia-500/8 px-3 py-1 text-[12px] text-muted-foreground transition-all duration-150 hover:border-violet-500/40 hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
             >
               {t}
             </button>
           ))}
         </div>
 
-        <p className="text-[11px] text-muted-foreground/40">
+        <p className="text-[11px] text-muted-foreground/35">
           Cmd+Enter to generate · typically 15–25s
         </p>
       </div>
 
       {/* Loading skeletons */}
       {isGenerating && (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <p className="text-[13px] text-muted-foreground">
-            Generating 5 platform-specific pieces for &ldquo;{topic}&rdquo;...
+            Generating for{' '}
+            <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text font-medium text-transparent">
+              &ldquo;{topic}&rdquo;
+            </span>
+            …
           </p>
           <div className="grid gap-4 md:grid-cols-2">
             {PLATFORM_LABELS.map((label) => (
@@ -166,7 +179,10 @@ export function ContentStudio({ recentBatches }: ContentStudioProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-[13px] text-muted-foreground">
-              {result.pieces.length} pieces for &ldquo;{topic}&rdquo;
+              {result.pieces.length} pieces for{' '}
+              <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text font-medium text-transparent">
+                &ldquo;{topic}&rdquo;
+              </span>
             </p>
             <a
               href={`/content/${result.batchId}`}
@@ -186,7 +202,7 @@ export function ContentStudio({ recentBatches }: ContentStudioProps) {
       {/* Recent batches */}
       {showRecent && (
         <div className="space-y-3">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/50">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/40">
             Recent batches
           </p>
           <div className="space-y-0.5">
@@ -197,7 +213,7 @@ export function ContentStudio({ recentBatches }: ContentStudioProps) {
                 className="flex items-center justify-between rounded-md px-3 py-2 text-[13px] transition-colors duration-150 hover:bg-muted/40"
               >
                 <span className="truncate text-foreground/80">{batch.topic}</span>
-                <span className="ml-4 shrink-0 text-[11px] text-muted-foreground/60">
+                <span className="ml-4 shrink-0 text-[11px] text-muted-foreground/50">
                   {new Date(batch.created_at).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',

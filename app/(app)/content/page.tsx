@@ -32,7 +32,11 @@ export default async function ContentPage() {
   return (
     <div className="space-y-8 pb-16">
       <PageHeader
-        title="Content Studio"
+        title={
+          <span className="bg-gradient-to-r from-violet-500 via-fuchsia-500 to-violet-500 bg-clip-text text-transparent">
+            Content Studio
+          </span>
+        }
         subtitle="Type a topic — get 5 platform-specific pieces in under 25 seconds."
       />
       <ContentStudio recentBatches={recentBatches} />
