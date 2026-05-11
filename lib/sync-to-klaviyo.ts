@@ -44,7 +44,7 @@ export async function syncLeadToKlaviyo(leadId: string): Promise<SyncResult> {
     const rule = findRuleForKeyword(lead.keyword as string | null);
     const listId = rule?.listId;
     if (listId) {
-      await subscribeToList(profileId, listId);
+      await subscribeToList(profileId, listId, email);
     }
 
     await admin

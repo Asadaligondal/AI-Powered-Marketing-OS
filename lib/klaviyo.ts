@@ -54,7 +54,7 @@ export async function createProfile(opts: {
   return id;
 }
 
-export async function subscribeToList(profileId: string, listId: string): Promise<void> {
+export async function subscribeToList(profileId: string, listId: string, email: string): Promise<void> {
   const res = await fetch(`${KLAVIYO_API_BASE}/profile-subscription-bulk-create-jobs/`, {
     method: 'POST',
     headers: authHeaders(),
@@ -68,6 +68,7 @@ export async function subscribeToList(profileId: string, listId: string): Promis
                 type: 'profile',
                 id: profileId,
                 attributes: {
+                  email,
                   subscriptions: {
                     email: { marketing: { consent: 'SUBSCRIBED' } },
                   },
