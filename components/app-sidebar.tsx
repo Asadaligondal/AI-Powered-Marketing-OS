@@ -6,10 +6,13 @@ import {
   FileText,
   LayoutDashboard,
   LogOut,
+  Moon,
   Palette,
+  Sun,
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -20,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { createClient } from "@/lib/supabase/client";
+import { startThemeCircleTransition } from "@/lib/theme-transition";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -43,6 +47,8 @@ function initialsFromName(name: string) {
 export function AppSidebar({ brandName }: { brandName: string }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === "dark";
 
   async function signOut() {
     const supabase = createClient();
@@ -84,7 +90,23 @@ export function AppSidebar({ brandName }: { brandName: string }) {
         })}
       </nav>
 
-      <div className="border-t border-sidebar-border p-2">
+      <div className="border-t border-sidebar-border p-2 space-y-0.5">
+        {/* Theme toggle */}
+        <button
+          onClick={(e) => {
+            const next = isDark ? "light" : "dark";
+            startThemeCircleTransition(setTheme, next, e.clientX, e.clientY);
+          }}
+          className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium text-muted-foreground transition-colors duration-150 ease-out hover:bg-muted/70 hover:text-foreground"
+        >
+          {isDark ? (
+            <Sun className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} aria-hidden />
+          ) : (
+            <Moon className="w-[18px] h-[18px] shrink-0" strokeWidth={1.5} aria-hidden />
+          )}
+          <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
+        </button>
+
         <DropdownMenu>
           <DropdownMenuTrigger className="flex w-full items-center gap-2 rounded-md px-2 py-2 text-left outline-none transition-colors duration-150 ease-out hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-ring">
             <Avatar size="sm" className="size-7 border border-border">

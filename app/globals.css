@@ -115,6 +115,67 @@
   color-scheme: dark;
 }
 
+.light {
+  color-scheme: light;
+
+  --linear-canvas: #ffffff;
+  --linear-surface-1: #f7f8fa;
+  --linear-surface-2: #f0f1f4;
+  --linear-surface-3: #e8eaed;
+  --linear-surface-4: #e2e4e8;
+  --linear-hairline: #e2e4e9;
+  --linear-hairline-strong: #c8cad1;
+  --linear-ink: #111827;
+  --linear-ink-muted: #374151;
+  --linear-ink-subtle: #6b7280;
+  --linear-ink-tertiary: #9ca3af;
+  --linear-primary: #5e6ad2;
+  --linear-primary-hover: #4a55bf;
+  --linear-primary-focus: #4f5abf;
+  --linear-success: #16a34a;
+  --linear-overlay: #000000;
+
+  --elev-edge: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+
+  --background: var(--linear-canvas);
+  --foreground: var(--linear-ink);
+  --card: var(--linear-surface-1);
+  --card-foreground: var(--linear-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--linear-ink);
+  --primary: var(--linear-primary);
+  --primary-foreground: #ffffff;
+  --primary-hover: var(--linear-primary-hover);
+  --primary-active: var(--linear-primary-focus);
+  --secondary: var(--linear-surface-1);
+  --secondary-foreground: var(--linear-ink);
+  --muted: var(--linear-surface-2);
+  --muted-foreground: var(--linear-ink-subtle);
+  --accent: var(--linear-surface-2);
+  --accent-foreground: var(--linear-ink);
+  --destructive: oklch(0.58 0.2 25);
+  --border: var(--linear-hairline);
+  --input: var(--linear-hairline);
+  --ring: rgb(94 105 209 / 0.35);
+  --success: var(--linear-success);
+  --radius: 12px;
+
+  --sidebar: var(--linear-surface-1);
+  --sidebar-foreground: var(--linear-ink);
+  --sidebar-primary: var(--linear-primary);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--linear-surface-2);
+  --sidebar-accent-foreground: var(--linear-ink);
+  --sidebar-border: var(--linear-hairline);
+  --sidebar-ring: rgb(94 105 209 / 0.35);
+
+  --chart-1: var(--linear-primary);
+  --chart-2: var(--linear-ink-muted);
+  --chart-3: var(--linear-ink-subtle);
+  --chart-4: var(--linear-surface-3);
+  --chart-5: var(--linear-success);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/40;
@@ -140,4 +201,35 @@
 
 .cn-toast {
   @apply border-border bg-popover text-popover-foreground shadow-none ring-1 ring-border;
+}
+
+/* ─── View transition: circular reveal from click point ─── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+  animation: theme-circle-reveal 0.85s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+}
+
+@keyframes theme-circle-reveal {
+  from {
+    clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+  to {
+    clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }
